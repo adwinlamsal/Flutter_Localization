@@ -10,45 +10,49 @@ class Homepage extends StatefulWidget {
 }
 
 class _MyAppState extends State<Homepage> {
-  List list = ["ne", "en"];
+  List<Map<String,String>> list = [
+    {"symbol": "ne", "Language": "Nepali"},
+    {"symbol": "en", "Language": "English"}
+
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.description),
+
+        actions: [
+          Container(
+            height: 300,
+            child:
+            Consumer<adwinprovider>(builder: (BuildContext, todo, child) {
+              return list.length == 0
+                  ? Text("")
+                  : Container(
+                height: 200,
+                child: DropdownButton<String>(
+                  value: list[0]["symbol"],
+                  hint: Text("Select Language"),
+                  onChanged: (String? newValue) {
+                    todo.ChangeLanguage(newValue!);
+                    print(newValue);
+                  },
+                  items: list.map<DropdownMenuItem<String>>((value) {
+                    return DropdownMenuItem<String>(
+                      value: value["symbol"],
+                      child: Text("${value["Language"]}"),
+                    );
+                  }).toList(),
+                ),
+              );
+            }),
+          )
+        ],
       ),
       body: Container(
         height: 500,
-        child: Column(
-          children: [
-            Text(AppLocalizations.of(context)!.helloWorld),
-            Container(
-              height: 300,
-              child:
-                  Consumer<adwinprovider>(builder: (BuildContext, todo, child) {
-                return list.length == 0
-                    ? Text("")
-                    : Container(
-                        height: 200,
-                        child: DropdownButton<String>(
-                          value: list[0],
-                          onChanged: (String? newValue) {
-                            todo.ChangeLanguage(newValue!);
-                            print(newValue);
-                          },
-                          items: list.map<DropdownMenuItem<String>>((value) {
-                            return DropdownMenuItem<String>(
-                              value: value,
-                              child: Text(value),
-                            );
-                          }).toList(),
-                        ),
-                      );
-              }),
-            )
-          ],
-        ),
+        child: Center(child: Text(AppLocalizations.of(context)!.helloWorld)),
       ),
     );
   }
